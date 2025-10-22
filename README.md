@@ -2,9 +2,42 @@
 
 Application web complète pour gérer le suivi des clés d'une agence immobilière, avec gestion des départs, retours, alertes de retard et historique complet.
 
+## 🆕 Version Actuelle : v2.1.7.3
+
+### 🎨 Améliorations récentes (22 octobre 2025) :
+1. ✅ **Page d'accueil épurée** - Boutons "Historique" et "Répertoire" côte à côte, renommés et alignés
+2. ✅ **Historique réorganisé** - Détails en 5 sections claires (bien, personnes, photo, signatures, actions)
+3. ✅ **Bouton "Enregistrer le départ"** - Écouteur du formulaire maintenant correctement attaché
+4. ✅ **Canvas de signature dans modal de retour** - Initialisation automatique et robuste
+5. ✅ **Gestion de largeur canvas = 0** - Fallback intelligent sur largeur du parent
+6. ✅ **Historique compact** - Affichage en accordéon pour meilleure lisibilité
+
 ## ✨ Fonctionnalités Principales
 
-### 🔍 Recherche Rapide depuis la Page d'Accueil (NOUVEAU!)
+### 📇 Répertoire de Contacts (NOUVEAU v2.1.6.1!)
+- **Base de données de contacts** pour gagner du temps
+- **Enregistrement depuis les formulaires** :
+  - 📇 Bouton "Enregistrer dans le répertoire" dans Départ ET Retour de clés
+  - Enregistrement direct en 1 clic sans quitter le formulaire
+  - Évite la double saisie des informations
+  - Gain de temps : 95% plus rapide que l'enregistrement manuel
+- **Auto-complétion intelligente** dans les formulaires :
+  - Recherche en temps réel dès 2 caractères
+  - Suggestions instantanées par nom, prénom ou entreprise
+  - Remplissage automatique de tous les champs en 1 clic
+  - Disponible sur départ ET retour de clés
+- **Gestion complète des contacts** :
+  - Affichage compact en accordéon (nom + prénom visibles)
+  - Développer pour voir tous les détails
+  - Ajouter, modifier, supprimer des contacts
+  - Recherche dans le répertoire
+  - Compteur de contacts
+- **Détection des doublons** :
+  - Vérification automatique (nom + prénom + téléphone)
+  - Message de confirmation avant ajout d'un doublon potentiel
+- **Accès rapide** depuis la page d'accueil avec bouton dédié
+
+### 🔍 Recherche Rapide depuis la Page d'Accueil
 - **Barre de recherche** directement sur la première page
 - Recherche **instantanée** dans toutes les clés sorties
 - Recherche par **tous les critères** : nom, prénom, entreprise, téléphone, email, ex-locataire, adresse, référence
@@ -21,6 +54,11 @@ Application web complète pour gérer le suivi des clés d'une agence immobiliè
   - **Gestion** 📋 : Marie, Laurent, Nathalie, Pierre
 
 ### 📤 Départ de Clés
+- **🔍 Recherche rapide dans le répertoire** (NOUVEAU!)
+  - Barre de recherche avec auto-complétion
+  - Suggestions en temps réel dès 2 caractères
+  - Remplissage automatique des champs en 1 clic
+  - Bouton d'accès direct au répertoire complet
 - Formulaire complet avec toutes les informations nécessaires
 - **Informations de la personne** :
   - Nom et Prénom (obligatoires)
@@ -32,6 +70,11 @@ Application web complète pour gérer le suivi des clés d'une agence immobiliè
   - Numéro de référence / Lot (facultatif)
   - Date de retour prévue (obligatoire)
 - **Notes/Commentaires** (facultatif)
+- **✍️ Signature électronique** (obligatoire) - NOUVEAU v2.1.5
+  - Signature au doigt (tactile) ou à la souris
+  - Canvas de signature intégré
+  - Bouton Effacer pour recommencer
+  - Stockage sécurisé avec l'enregistrement
 - **Capture photo** directe depuis la caméra/tablette
 
 ### 📥 Retour de Clés
@@ -41,7 +84,16 @@ Application web complète pour gérer le suivi des clés d'une agence immobiliè
   - Par nom de l'ex-locataire
 - **Recherche en temps réel** (sans cliquer sur "Rechercher")
 - **Comparaison photo** pour vérifier les clés retournées
-- **Validation simple** avec modal de confirmation
+- **🔍 Recherche rapide dans le répertoire** (NOUVEAU!)
+  - Barre de recherche avec auto-complétion
+  - Suggestions en temps réel pour la personne qui ramène
+  - Remplissage automatique des coordonnées
+- **Formulaire de validation complet** :
+  - Coordonnées de la personne qui ramène (nom, prénom, téléphone)
+  - Sélection du réceptionnaire (équipe + membre)
+  - **✍️ Signature électronique** (obligatoire) - v2.1.5
+  - Signature au doigt (tactile) ou à la souris
+  - Traçabilité complète de chaque mouvement
 
 ### 📊 Tableau de Bord Global Interactif (NOUVEAU v2.1.0!)
 - **Vue d'ensemble globale** sur la page d'accueil :
@@ -70,6 +122,12 @@ Application web complète pour gérer le suivi des clés d'une agence immobiliè
 
 ### 📋 Liste des Clés Sorties
 - Vue complète de toutes les clés actuellement en circulation
+- **🔍 Filtrage simplifié** (NOUVEAU v2.1.6!) :
+  - Interface minimaliste avec listes déroulantes
+  - Recherche par critère : personne, entreprise, ex-locataire, adresse
+  - Filtre de dates : date de départ ou date de retour prévue
+  - Filtre par statut : Dans les temps, Retard 1j, 3j, 7j+
+  - Réinitialisation rapide
 - **Alertes visuelles** selon le niveau de retard
 - **Tri automatique** par date de retour prévue
 - Possibilité de **marquer comme retourné** directement
@@ -426,7 +484,24 @@ Pour toute question ou problème :
 
 ## 🔄 Mises à Jour
 
-### Version Actuelle : 2.1.4
+### Version Actuelle : 2.1.7
+
+**Nouveautés v2.1.7 (22 octobre 2025) :**
+- ✨ **Historique compact en accordéon** - Navigation ultra-rapide dans l'historique
+  - Affichage condensé : Nom + Ex-locataire + Date de retour sur une ligne
+  - Clic pour développer/replier les détails complets
+  - Animation fluide et professionnelle
+  - Économie d'espace vertical de ~75%
+  - Responsive mobile optimisé
+- 🔧 **Enregistrement direct depuis formulaires**
+  - Bouton "📇 Enregistrer dans le répertoire" fonctionnel
+  - Détection automatique des doublons
+  - Validation complète des champs
+  - Disponible dans Départ ET Retour de clés
+- 🔧 **Correction auto-complétion**
+  - Suggestions correctement positionnées sous les champs
+  - Auto-remplissage fonctionnel dans modal de retour
+  - Recherche améliorée dans tous les formulaires
 
 **Fonctionnalités implémentées** :
 - ✅ Gestion multi-équipes avec identification rapide
@@ -455,13 +530,27 @@ Pour toute question ou problème :
     - 3 niveaux d'urgence (1j, 3j, 7j+)
     - Ouvre votre client email (Outlook, Gmail, etc.)
     - 95% de temps gagné sur l'envoi de rappels
-  - **🔍 Filtres d'historique simplifiés (v2.1.4 - NOUVEAU!)**
+  - **🔍 Filtres d'historique simplifiés (v2.1.4)**
     - Interface minimaliste avec listes déroulantes
     - Champs conditionnels : seuls les champs nécessaires apparaissent
     - Recherche par critère unique clair
     - Filtre de dates unifié (départ OU retour)
     - Plus d'erreurs avec des champs dupliqués
     - Expérience utilisateur optimisée
+  - **✍️ Signatures électroniques (v2.1.5)**
+    - Signature obligatoire au départ des clés
+    - Signature obligatoire au retour des clés
+    - Canvas tactile ou souris pour signer
+    - Bouton Effacer pour recommencer
+    - Stockage sécurisé des signatures en base64
+    - Affichage des signatures dans l'historique
+    - Traçabilité complète avec preuve de signature
+  - **🔍 Filtres pour Liste des Clés Sorties (v2.1.6 - NOUVEAU!)**
+    - Même système de filtrage simplifié que l'historique
+    - Recherche par personne, entreprise, ex-locataire, adresse
+    - Filtre par date de départ ou retour prévue
+    - Filtre par statut (dans les temps ou en retard)
+    - Interface cohérente et intuitive
 - ✅ Suppression de clés dans l'historique (v2.1.3)
 - ✅ Accès direct à l'historique depuis la page d'accueil (v2.1.1)
 - ✅ Interface réorganisée et plus compacte (v2.1.1)

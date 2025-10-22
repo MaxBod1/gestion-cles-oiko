@@ -39,10 +39,13 @@
                 </div>
             </div>
 
-            <!-- Bouton d'accès direct à l'historique -->
-            <div class="home-actions">
-                <button class="btn-history-access" onclick="showHistoryFromHome()">
-                    📚 Accéder à l'Historique Complet
+            <!-- Boutons d'accès rapide -->
+            <div class="quick-access-buttons">
+                <button class="btn-quick-access" onclick="showHistoryFromHome()">
+                    📚 Historique Complet
+                </button>
+                <button class="btn-quick-access" onclick="showPage('repertoire')">
+                    📇 Répertoire de Contacts
                 </button>
             </div>
             
@@ -155,6 +158,9 @@
                 <button class="btn btn-secondary" onclick="showPage('historique')">
                     📚 Historique
                 </button>
+                <button class="btn btn-repertoire" onclick="showPage('repertoire')">
+                    📇 Répertoire
+                </button>
             </div>
         </div>
 
@@ -167,6 +173,26 @@
 
             <form id="depart-form" class="form-container">
                 <h3>Informations de la personne</h3>
+                
+                <!-- Recherche dans le répertoire -->
+                <div class="form-group">
+                    <label>🔍 Recherche rapide dans le répertoire</label>
+                    <div class="autocomplete-container">
+                        <input type="text" 
+                               id="contact-search-depart" 
+                               class="form-control" 
+                               placeholder="Tapez un nom, prénom ou entreprise..."
+                               autocomplete="off">
+                        <button type="button" class="btn-repertoire-icon" onclick="showPage('repertoire')" title="Ouvrir le répertoire">
+                            📇
+                        </button>
+                        <div id="autocomplete-suggestions-depart" class="suggestions-dropdown"></div>
+                    </div>
+                </div>
+
+                <div class="form-separator">
+                    <span>OU remplir manuellement</span>
+                </div>
                 
                 <div class="form-group">
                     <label>Nom *</label>
@@ -191,6 +217,22 @@
                 <div class="form-group">
                     <label>Email *</label>
                     <input type="email" id="email" required>
+                </div>
+
+                <!-- Bouton enregistrer dans le répertoire -->
+                <div class="repertoire-action">
+                    <div class="repertoire-info">
+                        <span class="info-icon">💡</span>
+                        <span class="info-text">Personne régulière ? Enregistrez-la dans le répertoire pour gagner du temps !</span>
+                    </div>
+                    <button type="button" 
+                            id="btn-save-to-repertoire-depart" 
+                            class="btn-repertoire-save"
+                            onclick="saveCurrentContactToRepertoire('depart')">
+                        <span class="btn-icon">📇</span>
+                        <span class="btn-text">Enregistrer dans le répertoire</span>
+                    </button>
+                    <div id="repertoire-status-depart" class="repertoire-status"></div>
                 </div>
 
                 <h3>Informations du bien</h3>
@@ -218,6 +260,21 @@
                 <div class="form-group">
                     <label>Notes / Commentaires</label>
                     <textarea id="commentaires" rows="3"></textarea>
+                </div>
+
+                <h3>✍️ Signature de la personne</h3>
+                
+                <div class="signature-section">
+                    <p class="signature-instruction">Signez dans le cadre ci-dessous avec votre doigt (tactile) ou votre souris :</p>
+                    <div class="signature-container">
+                        <canvas id="signature-canvas-depart" class="signature-canvas"></canvas>
+                    </div>
+                    <div class="signature-buttons">
+                        <button type="button" class="btn btn-secondary" onclick="clearSignature('depart')">
+                            🗑️ Effacer
+                        </button>
+                    </div>
+                    <p class="signature-required-note">* La signature est obligatoire</p>
                 </div>
 
                 <h3>Photo des clés</h3>
@@ -284,6 +341,67 @@
                 <h1>📋 Liste des Clés Sorties</h1>
             </div>
 
+            <div class="filter-section-advanced">
+                <h3>🔍 Filtrer les clés sorties</h3>
+                
+                <div class="filter-row">
+                    <div class="filter-item-wide">
+                        <label for="filter-keys-type">Rechercher par</label>
+                        <select id="filter-keys-type" class="form-control" onchange="updateFilterFieldKeys()">
+                            <option value="">-- Choisir un critère --</option>
+                            <option value="person">👤 Personne qui a pris les clés</option>
+                            <option value="entreprise">🏢 Entreprise</option>
+                            <option value="ex-locataire">🏠 Ex-locataire</option>
+                            <option value="adresse">📍 Adresse du bien</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-item-wide" id="filter-keys-text-container" style="display: none;">
+                        <label for="filter-keys-text-value">Valeur</label>
+                        <input type="text" id="filter-keys-text-value" class="form-control" placeholder="Saisir le texte à rechercher...">
+                    </div>
+                </div>
+                
+                <div class="filter-row">
+                    <div class="filter-item">
+                        <label for="filter-keys-date-type">Filtrer par date</label>
+                        <select id="filter-keys-date-type" class="form-control" onchange="updateDateFieldsKeys()">
+                            <option value="">-- Aucun filtre de date --</option>
+                            <option value="depart">📅 Date de départ</option>
+                            <option value="return-expected">📅 Date de retour prévue</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-item" id="filter-keys-date-start-container" style="display: none;">
+                        <label for="filter-keys-date-start">Du</label>
+                        <input type="date" id="filter-keys-date-start" class="form-control">
+                    </div>
+                    
+                    <div class="filter-item" id="filter-keys-date-end-container" style="display: none;">
+                        <label for="filter-keys-date-end">Au</label>
+                        <input type="date" id="filter-keys-date-end" class="form-control">
+                    </div>
+                </div>
+                
+                <div class="filter-row">
+                    <div class="filter-item">
+                        <label for="filter-keys-status">Statut</label>
+                        <select id="filter-keys-status" class="form-control">
+                            <option value="">-- Tous --</option>
+                            <option value="ok">✅ Dans les temps</option>
+                            <option value="late1">🟠 Retard 1 jour</option>
+                            <option value="late3">🔴 Retard 3+ jours</option>
+                            <option value="late7">🔴⚡ Retard 7+ jours</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="filter-actions">
+                    <button class="btn btn-info" onclick="filterKeysList()">🔍 Filtrer</button>
+                    <button class="btn btn-secondary" onclick="clearFiltersKeysList()">🔄 Réinitialiser</button>
+                </div>
+            </div>
+
             <div id="keys-list" class="keys-list"></div>
         </div>
 
@@ -347,6 +465,35 @@
             <div id="historique-list" class="historique-list"></div>
         </div>
 
+        <!-- Page Répertoire -->
+        <div id="repertoire" class="page">
+            <div class="header">
+                <button class="back-btn" onclick="goBack('dashboard')">← Retour</button>
+                <h1>📇 Répertoire des Contacts</h1>
+            </div>
+
+            <div class="repertoire-header">
+                <div class="repertoire-search-bar">
+                    <input type="text" 
+                           id="repertoire-search" 
+                           class="form-control" 
+                           placeholder="🔍 Rechercher un contact (nom, prénom, entreprise, téléphone, email)..."
+                           oninput="searchRepertoire()">
+                </div>
+                <button class="btn btn-primary" onclick="openAddContactModal()">
+                    ➕ Ajouter un contact
+                </button>
+            </div>
+
+            <div class="repertoire-stats">
+                <span id="repertoire-count">0 contact</span>
+            </div>
+
+            <div id="repertoire-list" class="repertoire-list">
+                <!-- Les contacts seront affichés ici -->
+            </div>
+        </div>
+
         <!-- Modal de confirmation de retour -->
         <div id="modal-retour" class="modal">
             <div class="modal-content">
@@ -407,6 +554,27 @@
 
                 <div class="return-form">
                     <h3>👤 Personne qui ramène les clés</h3>
+                    
+                    <!-- Recherche dans le répertoire -->
+                    <div class="form-group">
+                        <label>🔍 Recherche rapide dans le répertoire</label>
+                        <div class="autocomplete-container">
+                            <input type="text" 
+                                   id="contact-search-return" 
+                                   class="form-control" 
+                                   placeholder="Tapez un nom, prénom ou entreprise..."
+                                   autocomplete="off">
+                            <button type="button" class="btn-repertoire-icon" onclick="showPage('repertoire'); closeQuickReturnModal();" title="Ouvrir le répertoire">
+                                📇
+                            </button>
+                            <div id="autocomplete-suggestions-return" class="suggestions-dropdown"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-separator">
+                        <span>OU remplir manuellement</span>
+                    </div>
+                    
                     <div class="form-group">
                         <label for="return-person-nom">Nom *</label>
                         <input type="text" id="return-person-nom" class="form-control" required>
@@ -418,6 +586,22 @@
                     <div class="form-group">
                         <label for="return-person-telephone">Téléphone *</label>
                         <input type="tel" id="return-person-telephone" class="form-control" required>
+                    </div>
+
+                    <!-- Bouton enregistrer dans le répertoire -->
+                    <div class="repertoire-action">
+                        <div class="repertoire-info">
+                            <span class="info-icon">💡</span>
+                            <span class="info-text">Personne régulière ? Enregistrez-la !</span>
+                        </div>
+                        <button type="button" 
+                                id="btn-save-to-repertoire-return" 
+                                class="btn-repertoire-save"
+                                onclick="saveCurrentContactToRepertoire('return')">
+                            <span class="btn-icon">📇</span>
+                            <span class="btn-text">Enregistrer dans le répertoire</span>
+                        </button>
+                        <div id="repertoire-status-return" class="repertoire-status"></div>
                     </div>
 
                     <h3>🎯 Réceptionnaire</h3>
@@ -436,12 +620,72 @@
                             <option value="">-- D'abord choisir une équipe --</option>
                         </select>
                     </div>
+
+                    <h3>✍️ Signature de la personne qui ramène</h3>
+                    <div class="signature-section">
+                        <p class="signature-instruction">Signez dans le cadre ci-dessous :</p>
+                        <div class="signature-container">
+                            <canvas id="signature-canvas-return" class="signature-canvas"></canvas>
+                        </div>
+                        <div class="signature-buttons">
+                            <button type="button" class="btn btn-secondary" onclick="clearSignature('return')">
+                                🗑️ Effacer
+                            </button>
+                        </div>
+                        <p class="signature-required-note">* La signature est obligatoire</p>
+                    </div>
                 </div>
 
                 <div class="modal-buttons">
                     <button class="btn btn-secondary" onclick="closeQuickReturnModal()">Annuler</button>
                     <button class="btn btn-success" onclick="confirmQuickReturn()">✅ Valider le Retour</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Modal Ajouter/Modifier Contact -->
+        <div id="modal-contact" class="modal">
+            <div class="modal-content">
+                <h2 id="modal-contact-title">➕ Ajouter un Contact</h2>
+                
+                <form id="contact-form" onsubmit="saveContactFromModal(event)">
+                    <div class="form-group">
+                        <label for="modal-contact-nom">Nom *</label>
+                        <input type="text" id="modal-contact-nom" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="modal-contact-prenom">Prénom *</label>
+                        <input type="text" id="modal-contact-prenom" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="modal-contact-entreprise">Entreprise</label>
+                        <input type="text" id="modal-contact-entreprise" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="modal-contact-telephone">Téléphone *</label>
+                        <input type="tel" id="modal-contact-telephone" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="modal-contact-email">Email</label>
+                        <input type="email" id="modal-contact-email" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="modal-contact-notes">Notes</label>
+                        <textarea id="modal-contact-notes" class="form-control" rows="3"></textarea>
+                    </div>
+                    
+                    <input type="hidden" id="modal-contact-id" value="">
+                    
+                    <div class="modal-buttons">
+                        <button type="button" class="btn btn-secondary" onclick="closeContactModal()">Annuler</button>
+                        <button type="submit" class="btn btn-primary">💾 Enregistrer</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
